@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BookCase</string>
+    <string-array name="books">
+        <item>Cat in the Hat</item>
+        <item>Diary of a Wimpy Kid: The Last Straw</item>
+        <item>1984</item>
+        <item>The Great Gatsby</item>
+        <item>Harry Potter and the Goblet of Fire</item>
+        <item>Narnia</item>
+        <item>Inconvenient Truths</item>
+        <item>Dreams from My Father</item>
+        <item>The Audacity of Hope</item>
+        <item>Basic Economics</item>
+    </string-array>
+</resources>

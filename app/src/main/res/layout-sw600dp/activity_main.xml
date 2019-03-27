@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/fragment3"
+        android:name="com.example.bookcase.BookListFragment"
+        android:layout_width="520dp"
+        android:layout_height="491dp"
+        android:layout_marginTop="107dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_book_list" />
+
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.example.bookcase.BookDetailsFragment"
+        android:layout_width="501dp"
+        android:layout_height="500dp"
+        android:layout_marginTop="108dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fragment3"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_book_detail" />
+</android.support.constraint.ConstraintLayout>
