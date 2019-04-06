@@ -23,6 +23,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             final ListView listView = findViewById(R.id.book_list);
             final BookAdapter bookAdapter = (BookAdapter) listView.getAdapter();
 
-
-
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -85,8 +84,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     @Override
-    public void onInputSent(CharSequence input) {
-        bookDetailsFragment.displayBook(input.toString());
+    public void onInputSent(Book input) throws IOException {
+        bookDetailsFragment.displayBook(input);
+
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter
