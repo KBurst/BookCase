@@ -48,7 +48,6 @@ public class BookDetailsFragment extends Fragment {
 
     private void setImage(Book book)
     {
-        Bitmap bitmap = null;
         String url = book.getCoverURL();
 
         Picasso

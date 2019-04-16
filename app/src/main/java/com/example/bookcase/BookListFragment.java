@@ -120,7 +120,6 @@ public class BookListFragment extends Fragment {
     }
 
     private void loadBooks() throws InterruptedException {
-        //TODO: Learn to parse JSONObject for this project.
         BookRetrieve process = new BookRetrieve();
         process.execute();
         Thread.sleep(500);

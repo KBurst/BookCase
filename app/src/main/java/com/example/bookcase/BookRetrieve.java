@@ -13,11 +13,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class BookRetrieve extends AsyncTask<Void, Void, Void> {
     private String data = "";
-    ArrayList<Book> bookList = new ArrayList<>();
 
     @Override
     protected Void doInBackground(Void... voids) {
@@ -34,24 +32,9 @@ public class BookRetrieve extends AsyncTask<Void, Void, Void> {
             }
 
             JSONArray bookArray = new JSONArray(data);
-            JSONObject bookData;
-            int bookId;
-            String bookTitle;
-            String bookAuthor;
-            int bookPublished;
-            String bookImageURL;
-            Book book;
 
-            for(int i = 0; i < bookArray.length(); i++)
-            {
-                bookData = (JSONObject) bookArray.get(i);
-                bookId = bookData.getInt("book_id");
-                bookTitle = bookData.getString("title");
-                bookAuthor = bookData.getString("author");
-                bookPublished = bookData.getInt("published");
-                bookImageURL = bookData.getString("cover_url");
-                book = new Book(bookId, bookTitle, bookAuthor, bookPublished, bookImageURL);
-                BookListFragment.books.add(book);
+            for (int i = 0; i < bookArray.length(); i++) {
+                BookListFragment.books.add(new Book((JSONObject) bookArray.get(i)));
             }
 
         } catch (MalformedURLException e) {
@@ -61,7 +44,6 @@ public class BookRetrieve extends AsyncTask<Void, Void, Void> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         return null;
     }
