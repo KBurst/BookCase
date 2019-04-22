@@ -28,8 +28,7 @@ public class BookListFragment extends Fragment {
     public static String searchString = "";
     private Button searchButton;
 
-    public interface BookListListener
-    {
+    public interface BookListListener {
         void onInputSent(Book input) throws IOException;
     }
 
@@ -38,13 +37,11 @@ public class BookListFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater,
             @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState)
-    {
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_list, container, false);
         bookList = view.findViewById(R.id.book_list);
         bookSearch = view.findViewById(R.id.text_query);
         searchButton = view.findViewById(R.id.search_button);
-
 
         try {
             loadBooks();
@@ -77,36 +74,29 @@ public class BookListFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof BookListListener)
-        {
+        if (context instanceof BookListListener) {
             listener = (BookListListener) context;
-        }
-        else
-        {
+        } else {
             throw new RuntimeException(context.toString() + " must implement Fragment Listener");
 
         }
     }
 
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         listener = null;
     }
 
-    private void reloadBooks()
-    {
+    private void reloadBooks() {
         searchString = bookSearch.getText().toString();
         ArrayList<Book> newBookArray = new ArrayList<>();
         ArrayList<String> newBookNames = new ArrayList<>();
 
-        for(int i = 0; i < allBooks.size(); i++)
-        {
-            if(allBooks.get(i).getTitle().contains(searchString)) {
+        for (int i = 0; i < allBooks.size(); i++) {
+            if (allBooks.get(i).getTitle().contains(searchString)) {
                 newBookArray.add(allBooks.get(i));
                 newBookNames.add(allBooks.get(i).getTitle());
             }
@@ -124,8 +114,7 @@ public class BookListFragment extends Fragment {
         process.execute();
         Thread.sleep(500);
 
-        for(int i = 0; i < books.size(); i++)
-        {
+        for (int i = 0; i < books.size(); i++) {
             bookNames.add(books.get(i).getTitle());
             allBooks.add(books.get(i));
         }
