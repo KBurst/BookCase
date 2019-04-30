@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -23,6 +24,7 @@ public class BookDetailsFragment extends Fragment {
     private ImageButton playButton, pauseButton, stopButton;
     public SeekBar audioProgress;
     private BookDetailsListener listener;
+    private Button downloadButton;
 
 
     public interface BookDetailsListener {
@@ -34,7 +36,7 @@ public class BookDetailsFragment extends Fragment {
 
         void setBookPosition(int bookPosition);
 
-        int returnBookProgress();
+        void bookDownload() throws InterruptedException;
     }
 
 
@@ -54,12 +56,24 @@ public class BookDetailsFragment extends Fragment {
         pauseButton = view.findViewById(R.id.pause_button);
         stopButton = view.findViewById(R.id.stop_button);
         audioProgress = view.findViewById(R.id.audio_progress);
+        downloadButton = view.findViewById(R.id.download_button);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     listener.bookPlay();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    listener.bookDownload();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

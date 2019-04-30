@@ -1,5 +1,6 @@
 package com.example.bookcase;
 
+import android.app.DownloadManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,7 +8,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.DataSetObserver;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -38,6 +41,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     private int bookProgressCounter = 0;
     private boolean isBookMoved;
     private Book currentBook;
+    private DownloadManager bookFileManager;
+
+    private long bookDownloadID;
 
     private AudiobookService.MediaControlBinder bookServiceBinder;
     public ServiceConnection bookServiceConnection = new ServiceConnection() {
@@ -131,16 +138,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             });
         }
     }
+
     Handler bookHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
             bookProgressCounter++;
-            bookPosition = (int)(100 * bookProgressCounter / ((float) currentBook.getDuration()));
-            System.out.println(bookPosition);
-
+            bookPosition = (int) (100 * bookProgressCounter / ((float) currentBook.getDuration()));
             bookDetailsFragment.audioProgress.setProgress(bookPosition);
-
-
             return false;
         }
     });
@@ -165,6 +169,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void bookPlay() throws InterruptedException {
+        if (currentBook == null) {
+            return;
+        }
         if (!isServiceRunning) {
             bindService(bookIntent, bookServiceConnection, Context.BIND_AUTO_CREATE);
             startService(bookIntent);
@@ -175,13 +182,10 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             isBookPlaying = true;
             isServiceRunning = true;
         }
-        if(!isBookPlaying)
-        {
-            if(!isBookMoved) {
+        if (!isBookPlaying) {
+            if (!isBookMoved) {
                 bookServiceBinder.pause();
-            }
-            else
-            {
+            } else {
                 Thread.sleep(1000);
                 bookServiceBinder.play(currentBook.getId(), bookPosition);
             }
@@ -191,8 +195,10 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void bookPause() {
-        if(isBookPlaying)
-        {
+        if (currentBook == null) {
+            return;
+        }
+        if (isBookPlaying) {
             bookServiceBinder.pause();
             isBookPlaying = false;
         }
@@ -200,35 +206,40 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void bookStop() {
+        if (currentBook == null) {
+            return;
+        }
         if (isServiceRunning) {
             bookServiceBinder.stop();
             bookServiceBinder.setProgressHandler(null);
             bookPosition = 0;
             bookProgressCounter = 0;
+            bookDetailsFragment.audioProgress.setProgress(bookPosition);
             isServiceRunning = false;
             isBookPlaying = false;
         }
     }
 
     @Override
-    public int returnBookProgress()
-    {
-        return 0;
+    public void bookDownload() throws InterruptedException {
+        String bookString = "https://kamorris.com/lab/audlib/download.php?id=" + currentBook.getId() + "";
+        bookFileManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request bookRequest = new DownloadManager.Request(Uri.parse(bookString));
+
+        bookDownloadID = bookFileManager.enqueue(bookRequest);
+        Thread.sleep(10000);
+        System.out.println("Should be downloaded");
+        // name of file is downloadfile.bin according to phone emulator.
+
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File [] files = dir.listFiles();
     }
 
     @Override
-    public void setBookPosition(int bookPosition)
-    {
-        this.bookPosition = (int)(bookPosition / 100.0 * currentBook.getDuration());
+    public void setBookPosition(int bookPosition) {
+        this.bookPosition = (int) (bookPosition / 100.0 * currentBook.getDuration());
         this.bookProgressCounter = bookPosition * currentBook.getDuration() / 100;
         this.isBookMoved = true;
-
-//        if(isBookPlaying)
-//        {
-//            bookServiceBinder.pause();
-//            bookServiceBinder.play(currentBook.getId(), this.bookPosition);
-//        }
-
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
