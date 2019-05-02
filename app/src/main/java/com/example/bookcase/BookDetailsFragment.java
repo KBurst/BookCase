@@ -24,11 +24,10 @@ public class BookDetailsFragment extends Fragment {
     private ImageButton playButton, pauseButton, stopButton;
     public SeekBar audioProgress;
     private BookDetailsListener listener;
-    private Button downloadButton;
-
+    public Button downloadButton;
 
     public interface BookDetailsListener {
-        void bookPlay() throws InterruptedException;
+        void bookPlay();
 
         void bookPause();
 
@@ -36,9 +35,8 @@ public class BookDetailsFragment extends Fragment {
 
         void setBookPosition(int bookPosition);
 
-        void bookDownload() throws InterruptedException;
+        void bookDownload();
     }
-
 
     @Nullable
     @Override
@@ -61,22 +59,14 @@ public class BookDetailsFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    listener.bookPlay();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                listener.bookPlay();
             }
         });
 
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    listener.bookDownload();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                listener.bookDownload();
             }
         });
 
@@ -94,22 +84,20 @@ public class BookDetailsFragment extends Fragment {
             }
         });
 
-
         audioProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                //listener.setBookPosition(seekBar.getProgress());
+
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                //listener.setBookPosition(seekBar.getProgress());
+
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 listener.setBookPosition(seekBar.getProgress());
-                //System.out.println(seekBar.getProgress());
             }
         });
 
@@ -123,7 +111,6 @@ public class BookDetailsFragment extends Fragment {
             listener = (BookDetailsListener) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement Fragment Listener");
-
         }
     }
 
@@ -147,5 +134,13 @@ public class BookDetailsFragment extends Fragment {
                 .with(this.getContext())
                 .load(url)
                 .into(bookImage);
+    }
+
+    public void swapDownloadToDelete() {
+        downloadButton.setText("Delete");
+    }
+
+    public void swapDeleteToDownload() {
+        downloadButton.setText("Download");
     }
 }
